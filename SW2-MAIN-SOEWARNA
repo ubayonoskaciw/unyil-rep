@@ -1,0 +1,243 @@
+TELKOM-SW1#sh run
+Building configuration...
+
+Current configuration : 5600 bytes
+!
+! No configuration change since last restart
+! NVRAM config last updated at 12:26:03 WIB Tue Sep 2 2025
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname TELKOM-SW1
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$jKTb$Bkm1Hemc7TPNmX9UdiScA1
+!
+no aaa new-model
+clock timezone WIB 7
+system mtu routing 1500
+vtp mode transparent
+ip subnet-zero
+!
+no ip domain-lookup
+!
+!
+crypto pki trustpoint TP-self-signed-1780356864
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1780356864
+ revocation-check none
+ rsakeypair TP-self-signed-1780356864
+!
+!
+crypto pki certificate chain TP-self-signed-1780356864
+ certificate self-signed 01
+  30820243 308201AC A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31373830 33353638 3634301E 170D3933 30333031 30303031 
+  32385A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 37383033 
+  35363836 3430819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100F309 6FB19F36 24B470F5 0DF42427 F7B25CEA 622B4473 D5A9FFF1 8DCB229C 
+  93C41853 0F1902C3 76A68EFC CE409FAD 9E2EF000 EB2E8FFE 121C9D81 D0FC3C48 
+  0A43FB6A 8E0D6988 36F8D0BC 32992BF7 45AA7C14 67B648EF A76F758D 7E72ADC9 
+  595C3FCF 8FDE27B4 822C91F0 99D3DDAE C00B20C7 B88EF837 0B647D4D 86E495EE 
+  22E90203 010001A3 6B306930 0F060355 1D130101 FF040530 030101FF 30160603 
+  551D1104 0F300D82 0B54454C 4B4F4D2D 5357312E 301F0603 551D2304 18301680 
+  14E0D7E2 D35E1A9B 3065A126 B203FB50 666A4965 D6301D06 03551D0E 04160414 
+  E0D7E2D3 5E1A9B30 65A126B2 03FB5066 6A4965D6 300D0609 2A864886 F70D0101 
+  04050003 81810044 CAB1E2A7 FF474919 2391980E 7284BF8B 5DD4306B B73C8EFF 
+  FCCAF0A7 D1011C9C E3387A45 02E7B4D0 3453278C 7209274A 7B75F26F 747D1AF4 
+  229821B6 DA5AA994 AA1650EB 761239A5 CFF9AD2A AA1B8D86 C54775A0 9016C1B6 
+  38C5B355 EDA5532C 49024AF4 A05C60AA BB0EE1EB A23B349E E86F6AEA 7AE45EA2 
+  55114634 243952
+  quit
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 1-4094 priority 40960
+!
+vlan internal allocation policy ascending
+!
+vlan 2
+ name SITA
+!
+vlan 30
+ name INTERLINK_SW_CASCADE
+!
+vlan 65
+ name VLAN-MANAGEMENT
+!
+vlan 192
+ name SW-INTERLINK
+!
+vlan 804
+ name KOREAN-Airlines
+!
+vlan 870
+ name cathai_airways
+!
+vlan 871
+ name SQ_DATA
+!
+vlan 872
+ name SQ_VOICE
+!
+vlan 2407 
+!
+vlan 2409
+ name PT-JAS
+!
+vlan 2421
+ name KLM_Office
+!
+vlan 2422 
+!
+vlan 2426
+ name Eva_Air
+!
+!
+!
+interface GigabitEthernet0/1
+ description VLAN MGT TO SW1-MAIN-SOEWARNA (172.24.17.35)
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 30
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ description (VLAN 2526) METRO QINQ SITA TO T3U
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 2,804,870-872,2409,2422,2426
+ switchport mode trunk
+!
+interface GigabitEthernet0/3
+ description VLAN-804_KOREAN-AIRLINES
+ switchport access vlan 804
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/4
+!
+interface GigabitEthernet0/5
+ description (VLAN 870) CATHAY PACIFIC (CX)
+ switchport access vlan 870
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/6
+ description (VLAN 2421) KLM CARGO (AIRFRANCE) (LANTAI 3)
+ switchport access vlan 2421
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/7
+ description (VLAN 2426) EVA AIR (BR) (LANTAI 2)
+ switchport access vlan 2426
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/8
+ description (VLAN 2409) PT JAS (JASA ANGKASA SEMESTA)
+ switchport access vlan 2409
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/9
+ description (VLAN 871 DATA) SINGAPORE AIR (SQ)
+ switchport access vlan 871
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/10
+ description (VLAN 872 VOICE) SINGAPORE AIR (SQ)
+ switchport access vlan 872
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/11
+!
+interface GigabitEthernet0/12
+!
+interface GigabitEthernet0/13
+!
+interface GigabitEthernet0/14
+!
+interface GigabitEthernet0/15
+!
+interface GigabitEthernet0/16
+!
+interface GigabitEthernet0/17
+!
+interface GigabitEthernet0/18
+!
+interface GigabitEthernet0/19
+!
+interface GigabitEthernet0/20
+!
+interface GigabitEthernet0/21
+!
+interface GigabitEthernet0/22
+!
+interface GigabitEthernet0/23
+!
+interface GigabitEthernet0/24
+ description INTERLINK TO TELKOM-SW2
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 2,30,192,804,870-872,2409,2421,2422,2426
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ no ip route-cache
+!
+interface Vlan2
+ description SITA
+ ip address 57.236.203.28 255.255.255.240
+ no ip route-cache
+!
+interface Vlan30
+ ip address 192.168.1.3 255.255.255.0
+ no ip route-cache
+!
+interface Vlan65
+ description VLAN-MANAGEMENT
+ ip address 172.24.17.37 255.255.255.192
+ no ip route-cache
+!
+interface Vlan192
+ description For Telnet to telkom-sw2
+ ip address 192.168.192.1 255.255.255.248
+ no ip route-cache
+!
+ip http server
+ip http secure-server
+!
+control-plane
+!
+banner motd ^C
+WARNING:  Unauthorized access to this device is prohibited.
+
+This is Primary PT Telkom Managed Swicth at Soewarna.
+All changes is to be performed by PT Telkom.
+^C
+!
+line con 0
+ password 7 105D000D04031707070B27
+ login
+line vty 0 4
+ password 7 111A101116060E000F2526
+ login
+line vty 5 15
+ password 7 061506354D5A0C150E181F
+ login
+!
+end
+
+TELKOM-SW1#
